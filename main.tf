@@ -65,3 +65,11 @@ output "bucket_arn" {
   value = aws_s3_bucket.main.arn
 }
 
+resource "aws_s3_bucket_ownership_controls" "preferred" {
+  bucket = aws_s3_bucket.main.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+

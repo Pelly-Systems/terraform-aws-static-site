@@ -25,7 +25,6 @@ data "aws_iam_policy_document" "s3_policy" {
 
 resource "aws_s3_bucket" "main" {
   bucket = "${var.site_name}${replace(var.domain, ".", "-")}"
-  acl    = "public-read"
 
   policy = data.aws_iam_policy_document.s3_policy.json
 
@@ -34,6 +33,7 @@ resource "aws_s3_bucket" "main" {
     error_document = "404.html"
   }
 }
+
 
 resource "aws_s3_bucket_public_access_block" "main_acl_policy" {
   bucket = aws_s3_bucket.main.id
@@ -73,3 +73,9 @@ resource "aws_s3_bucket_ownership_controls" "preferred" {
   }
 }
 
+resource "aws_s3_bucket_acl" "pread" {
+  depends_on = [aws_s3_bucket_ownership_controls.preferred]
+
+  bucket = aws_s3_bucket.main.id
+  acl    = "public-read"
+}

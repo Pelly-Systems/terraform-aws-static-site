@@ -34,8 +34,23 @@ data "aws_iam_policy_document" "access-logs-write" {
   }
 }
 
+resource "aws_s3_bucket_ownership_controls" "preferred" {
+  bucket = aws_s3_bucket.access_logs_bucket.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
 resource "aws_s3_bucket" "access_logs_bucket" {
   bucket = "${var.site_name}${var.domain}-access-logs"
+  acl    = "private"
+}
+
+resource "aws_s3_bucket_acl" "logs" {
+  depends_on = [aws_s3_bucket_ownership_controls.preferred]
+
+  bucket = aws_s3_bucket.access_logs_bucket.id
   acl    = "private"
 }
 

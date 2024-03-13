@@ -68,7 +68,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   comment             = "Created by terraform, dont edit manually!!"
   default_root_object = "index.html"
 
-  aliases = ["${var.site_name}${var.domain}"]
+  aliases = concat(["${var.site_name}${var.domain}"], var.aliases)
 
   logging_config {
     bucket = "${aws_s3_bucket.access_logs_bucket.id}.s3.amazonaws.com"

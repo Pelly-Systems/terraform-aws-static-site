@@ -28,3 +28,6 @@ variable "web_acl_id" {
   default = ""
 }
 
+variable "aliases" {
+  default = []
+}

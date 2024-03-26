@@ -54,6 +54,15 @@ resource "aws_s3_bucket_acl" "logs" {
   acl    = "private"
 }
 
+resource "aws_cloudfront_function" "indexfn" {
+  name = "${var.site_name}-index-fn"
+  runtime = "cloudfront-js-2.0"
+  comment = "Index function"
+  publish = true
+  code = file("${path.module}/handle-index.js")
+}
+
+
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
     domain_name = "${aws_s3_bucket.main.id}.s3.amazonaws.com"
@@ -78,6 +87,11 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     allowed_methods  = ["GET", "HEAD"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "S3-${aws_s3_bucket.main.id}"
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.indexfn.arn
+    }
 
     forwarded_values {
       query_string = false

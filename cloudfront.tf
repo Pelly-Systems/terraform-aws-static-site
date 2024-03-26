@@ -90,7 +90,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
     function_association {
       event_type   = "viewer-request"
-      function_arn = aws_cloudfront_function
+      function_arn = aws_cloudfront_function.indexfn.arn
     }
 
     forwarded_values {

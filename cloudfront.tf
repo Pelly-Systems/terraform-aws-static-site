@@ -55,7 +55,7 @@ resource "aws_s3_bucket_acl" "logs" {
 }
 
 resource "aws_cloudfront_function" "indexfn" {
-  name = "${var.site_name}-index-fn"
+  name = "${var.domain}-index-fn"
   runtime = "cloudfront-js-2.0"
   comment = "Index function"
   publish = true

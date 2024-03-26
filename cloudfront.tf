@@ -55,7 +55,7 @@ resource "aws_s3_bucket_acl" "logs" {
 }
 
 resource "aws_cloudfront_function" "indexfn" {
-  name = "${var.domain}-index-fn"
+  name = "${aws_s3_bucket.main.id}-index-fn"
   runtime = "cloudfront-js-2.0"
   comment = "Index function"
   publish = true
@@ -90,7 +90,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
     function_association {
       event_type   = "viewer-request"
-      function_arn = aws_cloudfront_function.indexfn.arn
+      function_arn = aws_cloudfront_function
     }
 
     forwarded_values {
